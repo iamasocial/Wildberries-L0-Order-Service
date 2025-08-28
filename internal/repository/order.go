@@ -28,13 +28,13 @@ func (r *orderRepository) GetOrderByUID(orderUID string) (*entities.Order, error
 		return nil, err
 	}
 
-	query = "SELECT " + strings.Join(deliveryColumns, ", ") + " FROM delivery WHERE order_uid=$!"
+	query = "SELECT " + strings.Join(deliveryColumns, ", ") + " FROM delivery WHERE order_uid=$1"
 	err = r.db.Get(&order.Delivery, query, orderUID)
 	if err != nil {
 		return nil, err
 	}
 
-	query = "SELECT " + strings.Join(paymentColumns, ", ") + " FROM payment WHERE order_uid=$1"
+	query = "SELECT " + strings.Join(paymentColumns, ", ") + " FROM payments WHERE order_uid=$1"
 	err = r.db.Get(&order.Payment, query, orderUID)
 	if err != nil {
 		return nil, err

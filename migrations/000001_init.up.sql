@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS payments (
     currency TEXT,
     provider TEXT,
     amount INT,
-    paymant_dt BIGINT,
+    payment_dt BIGINT,
     bank TEXT,
     delivery_cost INT,
     goods_total INT,

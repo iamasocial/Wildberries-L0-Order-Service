@@ -38,7 +38,7 @@ var paymentColumns = []string{
 }
 
 var itemColumns = []string{
-	"chart_id",
+	"chrt_id",
 	"track_number",
 	"price",
 	"rid",
