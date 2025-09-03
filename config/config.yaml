@@ -9,3 +9,9 @@ db:
   host: "localhost"
   port: "5432"
   sslmode: "disable"
+
+kafka:
+  brokers:
+    - "localhost:9092"
+  topic: "orders"
+  group_id: "order_service_group"

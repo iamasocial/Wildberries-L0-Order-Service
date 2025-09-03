@@ -13,6 +13,7 @@ type Config struct {
 	Env        string `yaml:"env" env-default:"dev"`
 	HTTPServer `yaml:"http_server"`
 	DB         `yaml:"db"`
+	Kafka      `yaml:"kafka"`
 }
 
 type HTTPServer struct {
@@ -28,6 +29,12 @@ type DB struct {
 	Password string
 	Name     string
 	SSL      string `yaml:"sslmode"`
+}
+
+type Kafka struct {
+	Brokers []string `yaml:"brokers"`
+	Topic   string   `yaml:"topic"`
+	GroupID string   `yaml:"group_id"`
 }
 
 func MustLoad() *Config {

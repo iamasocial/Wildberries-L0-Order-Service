@@ -31,7 +31,26 @@ services:
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092,DOCKER://kafka:29092
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,DOCKER:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
-      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+
+    volumes:
+      - kafka_data:/bitnami/kafka
+  
+  kafka-init:
+    image: bitnami/kafka:4.0
+    depends_on:
+      - kafka
+    entrypoint: ["/bin/bash", "-c"]
+    command: |
+      "
+      sleep 5 &&
+      kafka-topics.sh --create \
+        --topic orders \
+        --bootstrap-server kafka:9092 \
+        --partitions 1 \
+        --replication-factor 1 ||
+      echo 'topic already exists'
+      "
 
 volumes:
   db_data:
+  kafka_data:
