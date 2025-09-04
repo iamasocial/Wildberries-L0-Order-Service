@@ -15,3 +15,6 @@ kafka:
     - "localhost:9092"
   topic: "orders"
   group_id: "order_service_group"
+
+cache:
+  capacity: 3

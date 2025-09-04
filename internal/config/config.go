@@ -14,6 +14,7 @@ type Config struct {
 	HTTPServer `yaml:"http_server"`
 	DB         `yaml:"db"`
 	Kafka      `yaml:"kafka"`
+	Cache      `yaml:"cache"`
 }
 
 type HTTPServer struct {
@@ -35,6 +36,10 @@ type Kafka struct {
 	Brokers []string `yaml:"brokers"`
 	Topic   string   `yaml:"topic"`
 	GroupID string   `yaml:"group_id"`
+}
+
+type Cache struct {
+	Capacity int `yaml:"capacity"`
 }
 
 func MustLoad() *Config {

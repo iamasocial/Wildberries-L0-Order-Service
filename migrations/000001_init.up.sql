@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS orders (
-    order_uid TEXT PRIMARY KEY,
+    order_uid TEXT NOT NULL PRIMARY KEY,
     track_number TEXT,
     entry TEXT,
     locale TEXT,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 CREATE TABLE IF NOT EXISTS delivery (
-    id SERIAL PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     order_uid TEXT REFERENCES orders(order_uid) ON DELETE CASCADE,
     name TEXT,
     phone TEXT,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS delivery (
 );
 
 CREATE TABLE IF NOT EXISTS payments (
-    id SERIAL PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     order_uid TEXT REFERENCES orders(order_uid) ON DELETE CASCADE,
     transaction TEXT,
     request_id TEXT,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 
 CREATE TABLE IF NOT EXISTS items (
-    id SERIAL PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     order_uid TEXT REFERENCES orders(order_uid) ON DELETE CASCADE,
     chrt_id BIGINT,
     track_number TEXT,

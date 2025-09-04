@@ -8,8 +8,9 @@ import (
 )
 
 type Order interface {
-	GetOrderByUID(orderUID string) (*entities.Order, error)
+	GetOrderByUID(ctx context.Context, orderUID string) (*entities.Order, error)
 	SaveOrder(ctx context.Context, order *entities.Order) error
+	GetAllOrders(ctx context.Context) ([]entities.Order, error)
 }
 
 type orderRepository struct {
@@ -20,7 +21,7 @@ func NewOrderRepository(db *sqlx.DB) *orderRepository {
 	return &orderRepository{db: db}
 }
 
-func (r *orderRepository) GetOrderByUID(orderUID string) (*entities.Order, error) {
+func (r *orderRepository) GetOrderByUID(ctx context.Context, orderUID string) (*entities.Order, error) {
 	var order entities.Order
 
 	query := "SELECT " + orderColumns + " FROM orders WHERE order_uid=$1"
@@ -158,4 +159,36 @@ func (r *orderRepository) SaveOrder(ctx context.Context, order *entities.Order) 
 	}
 
 	return nil
+}
+
+func (r *orderRepository) GetAllOrders(ctx context.Context) ([]entities.Order, error) {
+	var orders []entities.Order
+
+	query := "SELECT " + orderColumns + " FROM orders"
+	err := r.db.Select(&orders, query)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, order := range orders {
+		query = "SELECT " + deliveryColumns + " FROM delivery WHERE order_uid=$1"
+		err = r.db.Get(&order.Delivery, query, order.OrderUID)
+		if err != nil {
+			return nil, err
+		}
+
+		query = "SELECT " + paymentColumns + " FROM payments WHERE order_uid=$1"
+		err = r.db.Get(&order.Payment, query, order.OrderUID)
+		if err != nil {
+			return nil, err
+		}
+
+		query = "SELECT " + itemColumns + " FROM items WHERE order_uid=$1"
+		err = r.db.Select(&order.Items, query, order.OrderUID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return orders, nil
 }
