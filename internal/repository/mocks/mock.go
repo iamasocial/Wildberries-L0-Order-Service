@@ -28,7 +28,7 @@ func (m *MockOrderRepository) SaveOrder(ctx context.Context, order *entities.Ord
 	return nil
 }
 
-func (m *MockOrderRepository) GetAllOrders(ctx context.Context) ([]entities.Order, error) {
+func (m *MockOrderRepository) GetLastOrders(ctx context.Context, cacheSize int) ([]entities.Order, error) {
 	orders := make([]entities.Order, 0, len(m.Orders))
 	for _, order := range m.Orders {
 		orders = append(orders, *order)

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS orders (
     order_uid TEXT NOT NULL PRIMARY KEY,
-    track_number TEXT,
+    track_number TEXT NOT NULL,
     entry TEXT,
     locale TEXT,
     internal_signature TEXT,
@@ -8,30 +8,30 @@ CREATE TABLE IF NOT EXISTS orders (
     delivery_service TEXT,
     shardKey TEXT,
     sm_id BIGINT,
-    date_created TIMESTAMPTZ,
+    date_created TIMESTAMPTZ NOT NULL,
     oof_shard TEXT
 );
 
 CREATE TABLE IF NOT EXISTS delivery (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     order_uid TEXT REFERENCES orders(order_uid) ON DELETE CASCADE,
-    name TEXT,
-    phone TEXT,
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL,
     zip TEXT,
-    city TEXT,
-    address TEXT,
-    region TEXT,
+    city TEXT NOT NULL,
+    address TEXT NOT NULL,
+    region TEXT NOT NULL,
     email TEXT
 );
 
 CREATE TABLE IF NOT EXISTS payments (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     order_uid TEXT REFERENCES orders(order_uid) ON DELETE CASCADE,
-    transaction TEXT,
+    transaction TEXT NOT NULL,
     request_id TEXT,
-    currency TEXT,
-    provider TEXT,
-    amount INT,
+    currency TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    amount INT NOT NULL,
     payment_dt BIGINT,
     bank TEXT,
     delivery_cost INT,
@@ -42,14 +42,14 @@ CREATE TABLE IF NOT EXISTS payments (
 CREATE TABLE IF NOT EXISTS items (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     order_uid TEXT REFERENCES orders(order_uid) ON DELETE CASCADE,
-    chrt_id BIGINT,
+    chrt_id BIGINT NOT NULL,
     track_number TEXT,
     price INT,
     rid TEXT,
-    name TEXT,
-    sale INT,
+    name TEXT NOT NULL,
+    sale INT NOT NULL,
     size TEXT,
-    total_price INT,
+    total_price INT NOT NULL,
     nm_id BIGINT,
     brand TEXT,
     status INT

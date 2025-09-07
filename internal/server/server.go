@@ -2,7 +2,6 @@ package server
 
 import (
 	"L0/internal/config"
-	delivery "L0/internal/delivery/http"
 	"context"
 	"net/http"
 )
@@ -11,13 +10,11 @@ type Server struct {
 	HTTPServer *http.Server
 }
 
-func NewServer(config *config.HTTPServer, handler *delivery.Handler) *Server {
-	router := delivery.NewRouter(handler)
-
+func NewServer(config *config.HTTPServer, handler http.Handler) *Server {
 	return &Server{
 		HTTPServer: &http.Server{
 			Addr:        config.Address,
-			Handler:     router,
+			Handler:     handler,
 			ReadTimeout: config.Timeout,
 			IdleTimeout: config.Idle,
 		},

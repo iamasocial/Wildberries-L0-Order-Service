@@ -10,7 +10,7 @@ import (
 type Order interface {
 	GetOrderByUID(ctx context.Context, orderUID string) (*entities.Order, error)
 	SaveOrder(ctx context.Context, order *entities.Order) error
-	GetAllOrders(ctx context.Context) ([]entities.Order, error)
+	GetLastOrders(ctx context.Context, cacheSize int) ([]entities.Order, error)
 }
 
 type orderRepository struct {
@@ -161,11 +161,11 @@ func (r *orderRepository) SaveOrder(ctx context.Context, order *entities.Order) 
 	return nil
 }
 
-func (r *orderRepository) GetAllOrders(ctx context.Context) ([]entities.Order, error) {
+func (r *orderRepository) GetLastOrders(ctx context.Context, cacheSize int) ([]entities.Order, error) {
 	var orders []entities.Order
 
-	query := "SELECT " + orderColumns + " FROM orders"
-	err := r.db.Select(&orders, query)
+	query := "SELECT " + orderColumns + " FROM orders ORDER BY date_created DESC LIMIT $1"
+	err := r.db.Select(&orders, query, cacheSize)
 	if err != nil {
 		return nil, err
 	}

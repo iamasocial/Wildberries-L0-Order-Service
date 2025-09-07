@@ -30,7 +30,6 @@ func (h *Handler) GetOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// h.logger.Info("order re", "order_uid", orderUID)
 	h.logger.Info("order retrieved successfully", "order_uid", orderUID)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(order)

@@ -60,9 +60,9 @@ func (s *orderService) SaveOrder(ctx context.Context, order *entities.Order) err
 }
 
 func (s *orderService) LoadCache(ctx context.Context) error {
-	orders, err := s.repo.GetAllOrders(ctx)
+	orders, err := s.repo.GetLastOrders(ctx, s.cache.GetSize())
 	if err != nil {
-		s.logger.Error("failed to get all orders from DB", "error", err.Error())
+		s.logger.Error("failed to get orders from DB", "error", err.Error())
 		return err
 	}
 

@@ -9,31 +9,8 @@ import (
 type Cache interface {
 	Get(orderUID string) (*entities.Order, bool)
 	Set(order *entities.Order)
+	GetSize() int
 }
-
-// type memoryCache struct {
-// 	mu     sync.RWMutex
-// 	orders map[string]*entities.Order
-// }
-
-// func NewMemoryCache() Cache {
-// 	return &memoryCache{
-// 		orders: make(map[string]*entities.Order),
-// 	}
-// }
-
-// func (c *memoryCache) Get(orderUID string) (*entities.Order, bool) {
-// 	c.mu.RLock()
-// 	defer c.mu.RUnlock()
-// 	order, ok := c.orders[orderUID]
-// 	return order, ok
-// }
-
-// func (c *memoryCache) Set(order *entities.Order) {
-// 	c.mu.Lock()
-// 	defer c.mu.Unlock()
-// 	c.orders[order.OrderUID] = order
-// }
 
 type entry struct {
 	key   string
@@ -84,4 +61,8 @@ func (c *lruCache) Set(order *entities.Order) {
 		c.evictionList.Remove(backElem)
 		delete(c.orders, backElem.Value.(*entry).key)
 	}
+}
+
+func (c *lruCache) GetSize() int {
+	return c.capacity
 }
